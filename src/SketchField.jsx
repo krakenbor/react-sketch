@@ -140,27 +140,34 @@ class SketchField extends PureComponent {
         let state = JSON.stringify(objState);
         // object, previous state, current state
         this._history.keep([obj, state, state])
+        this.props.objectAdded && this.props.objectAdded(objState);
     };
 
     /**
      * Action when an object is moving around inside the canvas
      */
     _onObjectMoving = (e) => {
-
+        let obj = e.target;
+        let objState = obj.toJSON();
+        this.props.objectMoving && this.props.objectMoving(objState);
     };
 
     /**
      * Action when an object is scaling inside the canvas
      */
     _onObjectScaling = (e) => {
-
+        let obj = e.target;
+        let objState = obj.toJSON();
+        this.props.objectScaling && this.props.objectScaling(objState);
     };
 
     /**
      * Action when an object is rotating inside the canvas
      */
     _onObjectRotating = (e) => {
-
+        let obj = e.target;
+        let objState = obj.toJSON();
+        this.props.objectRotating && this.props.objectRotating(objState);
     };
 
     /**
@@ -169,6 +176,10 @@ class SketchField extends PureComponent {
     _onObjectRemoved = (e) => {
         let obj = e.target;
         obj.version = 0;
+        // record current object state as json and save as originalState
+        let objState = obj.toJSON();
+        let state = JSON.stringify(objState);
+        this.props.objecetRemoved && this.props.objecetRemoved(objState);
     };
 
     /**
@@ -522,6 +533,7 @@ class SketchField extends PureComponent {
         obj.originalState = objState;
         let currState = JSON.stringify(objState);
         this._history.keep([obj, prevState, currState]);
+        this.props.objecetModified && this.props.objecetModified(objState);
     };
 
     _onMouseUp = (e) => {
